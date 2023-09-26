@@ -39,7 +39,7 @@ function App() {
                 />
               ))}
             </div>
-            <Footer />
+            <Footer todoItems={todoItems} />
           </div>
         </header>
       </main>

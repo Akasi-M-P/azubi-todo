@@ -13,9 +13,10 @@ const TodoItem = ({ id, text, deleteTodo }) => {
     deleteTodo(id);
   };
 
-  const handleComplete = () => {
+  const handleCompleted = () => {
     setComplete(!complete);
   };
+
   return (
     <div className="bg-white w-80 md:w-96 lg:w-2/4 2xl:w-3/5 2xl:px-12 px-4 h-14 mx-auto border-b border-gray-300 pb-4 py-4 flex justify-between">
       <div
@@ -26,13 +27,13 @@ const TodoItem = ({ id, text, deleteTodo }) => {
         {complete ? (
           <BsCheckLg
             className="text-green-600 cursor-pointer"
-            onClick={handleComplete}
+            onClick={handleCompleted}
           />
         ) : (
           <TiDelete
             className=" 
         text-blue-600 cursor-pointer"
-            onClick={handleComplete}
+            onClick={handleCompleted}
           />
         )}
         {text}

@@ -1,19 +1,34 @@
 import { useState } from "react";
 import "./App.css";
 import moon from "./assets/icon-moon.svg";
-import AddTodo from "./Components/AddTodo"; // Import AddTodo component
-import TodoItem from "./Components/TodoItem"; // Import TodoItem component
-import FilterNav from "./Components/FilterNav"; // Import FilterNav component
-import Footer from "./Components/Footer"; // Import Footer component
+import AddTodo from "./Components/AddTodo";
+import TodoItem from "./Components/TodoItem";
+import FilterNav from "./Components/FilterNav";
+import Footer from "./Components/Footer";
 
 function App() {
   // State for managing todo items
   const [todoItems, setTodoItems] = useState([]);
 
+  const [complete, setComplete] = useState(false);
+
   // Function to delete a todo item by ID
   const deleteTodo = (id) => {
     const newTodoItems = todoItems.filter((todoItem) => todoItem.id !== id);
     setTodoItems(newTodoItems);
+  };
+
+  const handleCompleted = () => {
+    setComplete(!complete);
+  };
+
+  // Function to delete Completed Items
+  const deleteCompletedItems = () => {
+    console.log(todoItems);
+    const unCompletedItems = todoItems.filter((todoItem) => !todoItem.complete);
+
+    setTodoItems(unCompletedItems);
+    console.log(todoItems);
   };
 
   return (
@@ -25,7 +40,11 @@ function App() {
             <img src={moon} alt="half-moon" className="object-contain" />
           </div>
           <div className="w-full">
-            <AddTodo todoItems={todoItems} setTodoItems={setTodoItems} />
+            <AddTodo
+              todoItems={todoItems}
+              setTodoItems={setTodoItems}
+              handleCompleted={handleCompleted}
+            />
           </div>
           <div className="mt-10">
             <FilterNav />
@@ -39,7 +58,10 @@ function App() {
                 />
               ))}
             </div>
-            <Footer todoItems={todoItems} />
+            <Footer
+              todoItems={todoItems}
+              deleteCompletedItems={deleteCompletedItems}
+            />
           </div>
         </header>
       </main>

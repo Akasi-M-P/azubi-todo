@@ -19,6 +19,7 @@ const AddTodo = ({ todoItems, setTodoItems }) => {
     const newTodoItem = {
       id: uuidv4(),
       text: newTodo,
+      status: false,
     };
     setTodoItems([...todoItems, newTodoItem]);
     setNewTodo("");

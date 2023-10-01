@@ -100,7 +100,11 @@ function App() {
                   />
                 ))}
             </div>
-            <Footer clearCompleted={clearCompleted} />
+            <Footer
+              clearCompleted={clearCompleted}
+              todoItems={todoItems} // Pass todoItems
+              filter={filter} // Pass filter
+            />
           </div>
         </header>
       </main>

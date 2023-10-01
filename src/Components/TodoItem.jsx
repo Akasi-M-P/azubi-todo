@@ -1,20 +1,19 @@
 /* eslint-disable react/prop-types */
-
+import { useState } from "react";
 import { TiDelete } from "react-icons/ti";
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import { BsCheckLg } from "react-icons/bs";
-import { useState } from "react";
 
-const TodoItem = ({ id, text, deleteTodo }) => {
-  const [complete, setComplete] = useState(false);
+const TodoItem = ({ id, text, todoItem, deleteTodo, updateStatus }) => {
+  const [complete, setComplete] = useState(todoItem.status);
 
-  // Handle delete button click
   const handleDelete = () => {
     deleteTodo(id);
   };
 
-  const handleCompleted = () => {
+  const toggleCompleted = () => {
     setComplete(!complete);
+    updateStatus(id, !complete);
   };
 
   return (
@@ -27,13 +26,12 @@ const TodoItem = ({ id, text, deleteTodo }) => {
         {complete ? (
           <BsCheckLg
             className="text-green-600 cursor-pointer"
-            onClick={handleCompleted}
+            onClick={toggleCompleted}
           />
         ) : (
           <TiDelete
-            className=" 
-        text-blue-600 cursor-pointer"
-            onClick={handleCompleted}
+            className="text-blue-600 cursor-pointer"
+            onClick={toggleCompleted}
           />
         )}
         {text}

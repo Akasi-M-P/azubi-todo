@@ -1,34 +1,52 @@
 import { useState } from "react";
 import "./App.css";
 import moon from "./assets/icon-moon.svg";
-import AddTodo from "./Components/AddTodo";
+import { v4 as uuidv4 } from "uuid";
 import TodoItem from "./Components/TodoItem";
 import FilterNav from "./Components/FilterNav";
 import Footer from "./Components/Footer";
 
 function App() {
-  // State for managing todo items
   const [todoItems, setTodoItems] = useState([]);
+  const [todo, setTodo] = useState("");
+  const [filter, setFilter] = useState("all");
 
-  const [complete, setComplete] = useState(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const createTodo = {
+      id: uuidv4(),
+      text: todo,
+      status: false,
+    };
+    setTodoItems([...todoItems, createTodo]);
+    setTodo("");
+  };
 
-  // Function to delete a todo item by ID
+  const handleChange = (e) => {
+    setTodo(e.target.value);
+  };
+
   const deleteTodo = (id) => {
     const newTodoItems = todoItems.filter((todoItem) => todoItem.id !== id);
     setTodoItems(newTodoItems);
   };
 
-  const handleCompleted = () => {
-    setComplete(!complete);
+  const updateStatus = (id, status) => {
+    const updatedTodoItems = todoItems.map((todoItem) => {
+      if (todoItem.id === id) {
+        return {
+          ...todoItem,
+          status: status,
+        };
+      }
+      return todoItem;
+    });
+    setTodoItems(updatedTodoItems);
   };
 
-  // Function to delete Completed Items
-  const deleteCompletedItems = () => {
-    console.log(todoItems);
-    const unCompletedItems = todoItems.filter((todoItem) => !todoItem.complete);
-
-    setTodoItems(unCompletedItems);
-    console.log(todoItems);
+  const clearCompleted = () => {
+    const updatedTodoItems = todoItems.filter((todoItem) => !todoItem.status);
+    setTodoItems(updatedTodoItems);
   };
 
   return (
@@ -40,28 +58,49 @@ function App() {
             <img src={moon} alt="half-moon" className="object-contain" />
           </div>
           <div className="w-full">
-            <AddTodo
-              todoItems={todoItems}
-              setTodoItems={setTodoItems}
-              handleCompleted={handleCompleted}
-            />
+            <div className="md:w-full">
+              <form
+                onSubmit={handleSubmit}
+                className="w-80 mx-auto relative md:w-96 lg:w-2/4 2xl:w-3/5"
+              >
+                <input
+                  value={todo}
+                  onChange={handleChange}
+                  type="text"
+                  placeholder="Create new ToDo item"
+                  className="w-80 lg:w-full h-11 rounded-md mt-1 px-5 focus:outline-none md:w-96"
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white h-8 w-12 rounded-md absolute right-3 top-2.5 lg:w-16"
+                >
+                  Add
+                </button>
+              </form>
+            </div>
           </div>
           <div className="mt-10">
-            <FilterNav />
+            <FilterNav filter={filter} setFilter={setFilter} />
             <div>
-              {todoItems.map((todo) => (
-                <TodoItem
-                  key={todo.id}
-                  id={todo.id}
-                  text={todo.text}
-                  deleteTodo={() => deleteTodo(todo.id)}
-                />
-              ))}
+              {todoItems
+                .filter((item) => {
+                  if (filter === "all") return true;
+                  if (filter === "active") return !item.status;
+                  if (filter === "completed") return item.status;
+                  return true;
+                })
+                .map((todoItem) => (
+                  <TodoItem
+                    key={todoItem.id}
+                    text={todoItem.text}
+                    id={todoItem.id}
+                    todoItem={todoItem}
+                    deleteTodo={() => deleteTodo(todoItem.id)}
+                    updateStatus={updateStatus}
+                  />
+                ))}
             </div>
-            <Footer
-              todoItems={todoItems}
-              deleteCompletedItems={deleteCompletedItems}
-            />
+            <Footer clearCompleted={clearCompleted} />
           </div>
         </header>
       </main>

@@ -1,5 +1,4 @@
-
-
+/* eslint-disable react/prop-types */
 const TaskCount = ({ count, filter }) => {
   return (
     <div className="text-gray-500">

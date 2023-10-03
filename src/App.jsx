@@ -1,15 +1,20 @@
 import { useState } from "react";
 import "./App.css";
+import "./Components/dark-mode.css";
 import moon from "./assets/icon-moon.svg";
+import sun from "./assets/icon-sun.svg";
 import { v4 as uuidv4 } from "uuid";
 import TodoItem from "./Components/TodoItem";
 import FilterNav from "./Components/FilterNav";
 import Footer from "./Components/Footer";
+import { useContext } from "react";
+import { ThemeContext } from "./Components/ThemeContext";
 
 function App() {
   const [todoItems, setTodoItems] = useState([]);
   const [todo, setTodo] = useState("");
   const [filter, setFilter] = useState("all");
+  const { darkMode, toggleDarkMode } = useContext(ThemeContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,19 +54,35 @@ function App() {
     setTodoItems(updatedTodoItems);
   };
 
+  const darkBG = "mt-10 h-screen darkMode";
+
   return (
     <>
       <main className="">
         <header className="bg-[url('./assets/bg-mobile-light.jpg')] bg-cover bg-no-repeat h-52 relative md:bg-[url('./assets/bg-desktop-light.jpg')]">
           <div className="flex justify-between px-7 py-10 md:px-10 md:py-10 lg:px-64 xl:px-80">
             <h1 className="text-white text-2xl font-bold">TO DO</h1>
-            <img src={moon} alt="half-moon" className="object-contain" />
+            {darkMode ? (
+              <img
+                src={sun}
+                alt="sun"
+                className="object-contain"
+                onClick={toggleDarkMode}
+              />
+            ) : (
+              <img
+                src={moon}
+                alt="half-moon"
+                className="object-contain"
+                onClick={toggleDarkMode}
+              />
+            )}
           </div>
           <div className="w-full">
             <div className="md:w-full">
               <form
                 onSubmit={handleSubmit}
-                className="w-80 mx-auto relative md:w-96 lg:w-2/4 2xl:w-3/5"
+                className="w-80 mx-auto relative  md:w-96 lg:w-2/4 2xl:w-3/5"
               >
                 <input
                   value={todo}
@@ -79,7 +100,7 @@ function App() {
               </form>
             </div>
           </div>
-          <div className="mt-10">
+          <div className={!darkMode ? "mt-10" : ` ${darkBG}`}>
             <FilterNav filter={filter} setFilter={setFilter} />
             <div>
               {todoItems
